@@ -1,5 +1,5 @@
 import { Button, TextField } from '@mui/material';
-import React from 'react';
+import React, {useState} from 'react';
 import Avatar from '@mui/material/Avatar';
 import CssBaseline from '@mui/material/CssBaseline';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -9,9 +9,59 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import swal from 'sweetalert';
+import { useHistory } from 'react-router-dom';
 
+
+
+async function login(creds) {
+    // console.log(creds);
+    console.log(JSON.stringify(creds));
+    // let item = {email, password}
+    let result = await fetch("http://127.0.0.1:5000/api/login/",
+    {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            // "Accept": "application/json"
+    },
+    body: creds
+
+    }
+    
+    ).then(data => data.json())
+}
 
 export const  Login = () => {
+
+    const history = useHistory();
+
+
+
+    const [email, setEmail] = useState()
+    const [password, setPassword] = useState()
+    console.log(email);
+    console.log(password);
+    const handleSubmit = async e => {
+        e.preventDefault();
+        const response = await login(JSON.stringify({"email": email, "password": password}))
+    if ('idToken' in response) {
+        swal("Success", response.message, "success", {
+          buttons: false,
+          timer: 2000,
+        })
+        .then((value) => {
+          localStorage.setItem('accessToken', response['refreshToken']);
+          localStorage.setItem('user', JSON.stringify(response['email']));
+          window.location.href = "/home";
+        });
+    } else {
+        swal("Failed", response.message, "error");
+      }
+
+    }
+    
+
     return (
         <Box
         sx={{
@@ -24,7 +74,7 @@ export const  Login = () => {
             <Typography component="h1" variant="h5">
                 Sign In
             </Typography>
-            <Box component="form">
+            <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                 <TextField
                 margin='normal'
                 required
@@ -34,6 +84,7 @@ export const  Login = () => {
                 name='email'
                 autoComplete='email'
                 autoFocus
+                onChange={(e)=>setEmail(e.target.value)}
                 />
             <TextField
             margin='normal'
@@ -43,6 +94,7 @@ export const  Login = () => {
             label="Password"
             type="password"
             autoComplete='password'
+            onChange={(e)=>setPassword(e.target.value)}
             />
             <FormControlLabel
             control={<Checkbox value="remember" color="primary"/>}
@@ -52,6 +104,7 @@ export const  Login = () => {
             type='submit'
             fullWidth
             variant='contained'
+            // onClick={login}
             sx={{mt: 3, mb: 2}}
             >
                 Sign In
