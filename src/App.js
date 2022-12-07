@@ -1,11 +1,25 @@
+import React from 'react';
 import './App.css';
-import { Login } from './components/login';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Login from './components/login';
+import Home from './components/home';
 
 function App() {
-  return (
-    <div className="App">
+  const token = localStorage.getItem('refreshToken');
 
-      <Login/>
+  if(!token) {
+    return <Login />
+  }
+
+  return (
+    <div className="wrapper">
+      <BrowserRouter>
+        <Routes>
+          <Route exact path="/home" element={<Home/>}/>
+          <Route path="/">
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
