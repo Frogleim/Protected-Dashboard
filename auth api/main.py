@@ -40,13 +40,11 @@ class Users(BaseModel):
     password: str
 
 
-class Data(BaseModel):
-    user_id: str
-
-
-@app.post('/api/get_exam_data/')
+@app.get('/api/get_exam_data/')
 async def getData():
-    return fetch_data()
+    exam_res = fetch_data()
+    print(exam_res)
+    return {'Message ': exam_res}
 
 
 @app.post('/api/login/')

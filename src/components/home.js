@@ -21,12 +21,13 @@ export default function  Home()  {
 
   useEffect(() => {
      exam()
-  })
+      
+  }, [])
 
   const  exam = async() => {
     const response =  fetch("http://127.0.0.1:5000/api/get_exam_data/",
     {
-        method: "POST",
+        method: "GET",
         headers: {
             "Content-Type": "application/json",
             // "Accept": "application/json"
@@ -35,7 +36,9 @@ export default function  Home()  {
     }
     
     )
-    setExams(await response.json())
+    console.log(response);
+  
+    // setExams(await response.json())
   }
 
   return (
@@ -51,7 +54,6 @@ export default function  Home()  {
           >
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            News
           </Typography>
           <Button color="inherit">Login</Button>
         </Toolbar>
@@ -66,7 +68,6 @@ export default function  Home()  {
         </Typography>
        
         <Typography variant="body2">
-          well meaning and kindly.
           <br />
           {exams}
         </Typography>
