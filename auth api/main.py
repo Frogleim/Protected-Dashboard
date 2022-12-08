@@ -5,9 +5,24 @@ from fastapi import FastAPI, Body, Request
 from typing import Dict, Any
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
 
 app = FastAPI()
+
+
+def fetch_data():
+    if not firebase_admin._apps:
+        cred = credentials.Certificate("./protected-dashboard-firebase.json")
+        firebase_admin.initialize_app(cred)
+
+        db = firestore.client()
+        doc_ref = db.collection(u'users').document(u'IkN4q8eRTLaxSQmP85ap7vcuiK23')
+
+        doc = doc_ref.get()
+        return doc.to_dict()
+
 
 origins = ["*"]
 
@@ -25,9 +40,13 @@ class Users(BaseModel):
     password: str
 
 
-@app.post('/api/sign_up/')
-async def signup():
-    pass
+class Data(BaseModel):
+    user_id: str
+
+
+@app.post('/api/get_exam_data/')
+async def getData():
+    return fetch_data()
 
 
 @app.post('/api/login/')

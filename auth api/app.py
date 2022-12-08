@@ -27,6 +27,10 @@ class SignIn:
         except Exception:
             print('Failed to sign in...')
 
+    def get_data(self):
+        user_id = self.sign_in()['localId']
+        return user_id
+
     def sign_up(self):
         firebase = pyrebase.initialize_app(self.config)
         try:

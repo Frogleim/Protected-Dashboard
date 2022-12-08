@@ -1,5 +1,5 @@
 import { Button, TextField } from '@mui/material';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Avatar from '@mui/material/Avatar';
 import CardContent from '@mui/material/CardContent';
 import Card from '@mui/material/Card';
@@ -12,32 +12,32 @@ import Box from '@mui/material/Box';
 import CardActions from '@mui/material/CardActions';
 // import MenuIcon from '@mui/icons-material/Menu';
 
+
+
+
 export default function  Home()  {
-  const bull = (
-    <Box
-      component="span"
-      sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}
-    >
-      •
-    </Box>
-  );
-//     const [anchorEl, setAnchorEl] = React.useState(null);
-//     const open = Boolean(anchorEl);
-//   const user = JSON.parse(localStorage.getItem('user'));
 
-//   const handleMenu = (event) => {
-//     setAnchorEl(event.currentTarget);
-//   };
+  const [exams, setExams] = useState()
 
-//   const handleClose = () => {
-//     setAnchorEl(null);
-//   };
+  useEffect(() => {
+     exam()
+  })
 
-//   const handleLogout = () => {
-//     localStorage.removeItem("accessToken");
-//     localStorage.removeItem("user");
-//     window.location.href = "/";
-//   };
+  const  exam = async() => {
+    const response =  fetch("http://127.0.0.1:5000/api/get_exam_data/",
+    {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            // "Accept": "application/json"
+    },
+  
+    }
+    
+    )
+    setExams(await response.json())
+  }
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -68,7 +68,7 @@ export default function  Home()  {
         <Typography variant="body2">
           well meaning and kindly.
           <br />
-          {'"a benevolent smile"'}
+          {exams}
         </Typography>
         <Typography variant="body2">
         You passed 
